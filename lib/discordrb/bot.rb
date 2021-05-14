@@ -385,11 +385,12 @@ module Discordrb
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
     # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
-    def send_temporary_message(channel, content, timeout, tts = false, embed = nil, attachments = nil, allowed_mentions = nil)
+    # @param message_reference [Message, String, Integer, nil] The message, or message ID, to reply to if any.
+    def send_temporary_message(channel, content, timeout, tts = false, embed = nil, attachments = nil, allowed_mentions = nil, message_reference = nil)
       Thread.new do
         Thread.current[:discordrb_name] = "#{@current_thread}-temp-msg"
 
-        message = send_message(channel, content, tts, embed, attachments, allowed_mentions)
+        message = send_message(channel, content, tts, embed, attachments, allowed_mentions, message_reference)
         sleep(timeout)
         message.delete
       end
@@ -504,7 +505,8 @@ module Discordrb
     # @param url [String, nil] The Twitch URL to display as a stream. nil for no stream.
     # @param since [Integer] When this status was set.
     # @param afk [true, false] Whether the bot is AFK.
-    # @param activity_type [Integer] The type of activity status to display. Can be 0 (Playing), 1 (Streaming), 2 (Listening), 3 (Watching)
+    # @param activity_type [Integer] The type of activity status to display.
+    #   Can be 0 (Playing), 1 (Streaming), 2 (Listening), 3 (Watching), or 5 (Competing).
     # @see Gateway#send_status_update
     def update_status(status, activity, url, since = 0, afk = false, activity_type = 0)
       gateway_check
@@ -555,6 +557,14 @@ module Discordrb
       gateway_check
       update_status(@status, name, url)
       name
+    end
+
+    # Sets the currently competing status to the specified name.
+    # @param name [String] The name of the game to be competing in.
+    # @return [String] The game that is being competed in now.
+    def competing=(name)
+      gateway_check
+      update_status(@status, name, nil, nil, nil, 5)
     end
 
     # Sets status to online.
