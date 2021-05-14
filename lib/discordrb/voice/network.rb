@@ -186,7 +186,7 @@ module Discordrb::Voice
     # @param session_id [String] The voice session ID
     # @param token [String] The Discord authentication token
     def send_init(server_id, bot_user_id, session_id, token)
-      @client.send({
+      @client.send_data({
         op: 0,
         d: {
           server_id: server_id,
@@ -202,7 +202,7 @@ module Discordrb::Voice
     # @param port [Integer] The port to bind UDP to
     # @param mode [Object] Which mode to use for the voice connection
     def send_udp_connection(ip, port, mode)
-      @client.send({
+      @client.send_data({
         op: 1,
         d: {
           protocol: 'udp',
@@ -220,7 +220,7 @@ module Discordrb::Voice
       millis = Time.now.strftime('%s%L').to_i
       @bot.debug("Sending voice heartbeat at #{millis}")
 
-      @client.send({
+      @client.send_data({
         op: 3,
         d: millis
       }.to_json)
@@ -230,7 +230,7 @@ module Discordrb::Voice
     # @param value [true, false, Integer] Whether or not the bot should be speaking, can also be a bitmask denoting audio type.
     def send_speaking(value)
       @bot.debug("Speaking: #{value}")
-      @client.send({
+      @client.send_data({
         op: 5,
         d: {
           speaking: value,

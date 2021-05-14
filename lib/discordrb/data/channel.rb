@@ -346,7 +346,7 @@ module Discordrb
       @bot.send_message(@id, content, tts, embed, attachments, allowed_mentions, message_reference)
     end
 
-    alias_method :send, :send_message
+    #alias_method = alias_method :send, :send_message
 
     # Sends a temporary message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.

@@ -78,7 +78,7 @@ module Discordrb::Events
       result
     end
 
-    alias_method :send, :send_message
+    #alias_method :send, :send_message
     alias_method :respond, :send_message
     alias_method :send_temp, :send_temporary_message
   end
